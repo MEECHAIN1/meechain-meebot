@@ -7,12 +7,13 @@ import { NFTMetadata } from '../types';
 import { ADRS } from '../lib/contracts';
 
 const GalleryPage: React.FC = () => {
-  const { account, isConnected, setNftBalance, addEvent, setLoading, setError, loading, error } = useAppState();
+  const { account, isConnected, setNftBalance, addEvent, setError, loading, error } = useAppState();
+  // Destructure new loading functions
+  const { incrementLoading, decrementLoading } = useAppState();
   const { data: walletClient } = useWalletClient();
   const { chain } = useAccount();
 
   const [userNfts, setUserNfts] = React.useState<NFTMetadata[]>([]);
-  // Removed local loadingNfts state, now using global 'loading'
   const [selectedNftId, setSelectedNftId] = React.useState<bigint | undefined>(undefined);
   const [transferToAddress, setTransferToAddress] = React.useState<Address | ''>('');
   const [approvingNft, setApprovingNft] = React.useState(false);
@@ -24,14 +25,14 @@ const GalleryPage: React.FC = () => {
       return;
     }
 
-    setLoading(true); // Use global loading state
+    incrementLoading(); // Use incrementLoading
     setError(null);
     try {
       const balance = await getNftBalance(account);
       setNftBalance(balance.toString()); // Convert bigint to string
       if (balance === 0n) {
         setUserNfts([]);
-        setLoading(false); // Reset global loading state
+        decrementLoading(); // Use decrementLoading
         return;
       }
 
@@ -55,9 +56,9 @@ const GalleryPage: React.FC = () => {
       console.error("Error fetching NFTs:", e);
       setError(`Failed to fetch NFTs: ${e.shortMessage || e.message}`);
     } finally {
-      setLoading(false); // Reset global loading state
+      decrementLoading(); // Use decrementLoading
     }
-  }, [account, isConnected, chain, setNftBalance, setError, setLoading]); // Added setLoading to dependencies
+  }, [account, isConnected, chain, setNftBalance, setError, incrementLoading, decrementLoading]);
 
   React.useEffect(() => {
     fetchUserNfts();
@@ -70,6 +71,7 @@ const GalleryPage: React.FC = () => {
       return;
     }
     setApprovingNft(true);
+    incrementLoading(); // Use incrementLoading
     setError(null);
     try {
       const { hash } = await approveNft(walletClient, ADRS.staking, tokenId, account); // Approve staking contract
@@ -86,6 +88,7 @@ const GalleryPage: React.FC = () => {
       setError(`NFT Approval failed: ${e.shortMessage || e.message}`);
     } finally {
       setApprovingNft(false);
+      decrementLoading(); // Use decrementLoading
     }
   };
 
@@ -95,6 +98,7 @@ const GalleryPage: React.FC = () => {
       return;
     }
     setTransferringNft(true);
+    incrementLoading(); // Use incrementLoading
     setError(null);
     try {
       const { hash } = await transferNft(walletClient, account, transferToAddress, selectedNftId, account);
@@ -113,6 +117,7 @@ const GalleryPage: React.FC = () => {
       setError(`NFT Transfer failed: ${e.shortMessage || e.message}`);
     } finally {
       setTransferringNft(false);
+      decrementLoading(); // Use decrementLoading
     }
   };
 
@@ -120,8 +125,8 @@ const GalleryPage: React.FC = () => {
     <div className="container mx-auto p-4 md:p-8">
       <h1 className="text-4xl font-extrabold text-white mb-8 text-center">My MeeBot NFTs</h1>
 
-      {loading && <p className="text-blue-400 text-center text-lg mb-4">Loading your NFTs...</p>} {/* Use global loading state */}
-      {error && ( // Using error from useAppState directly
+      {loading && <p className="text-blue-400 text-center text-lg mb-4">Loading your NFTs...</p>}
+      {error && (
         <div className="bg-red-700 p-4 rounded-lg text-white mb-6 text-center">
           Error: {error}
         </div>
@@ -131,7 +136,7 @@ const GalleryPage: React.FC = () => {
         <p className="text-slate-400 text-center text-lg">Connect your wallet to view your NFTs.</p>
       )}
 
-      {isConnected && userNfts.length === 0 && !loading && ( // Use global loading state
+      {isConnected && userNfts.length === 0 && !loading && (
         <p className="text-slate-400 text-center text-lg">You don't own any MeeBot NFTs yet.</p>
       )}
 

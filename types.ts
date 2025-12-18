@@ -6,15 +6,20 @@ declare global {
     VITE_NFT_ADDRESS?: string;
     VITE_TOKEN_ADDRESS?: string;
     VITE_STAKING_ADDRESS?: string;
+    // New: Placeholder for a swap contract address
+    VITE_SWAP_ADDRESS?: string; 
   }
 }
 
-export type ADRSKey = 'nft' | 'token' | 'staking';
+// Added 'swap' to ADRSKey
+export type ADRSKey = 'nft' | 'token' | 'staking' | 'swap';
 
 export interface ContractAddresses {
   nft: Address | undefined;
   token: Address | undefined;
   staking: Address | undefined;
+  // New: Placeholder for a swap contract address
+  swap: Address | undefined; 
 }
 
 export interface AppState {
@@ -38,7 +43,8 @@ export interface AppState {
   setStakingBalance: (balance: string) => void;
   setRewardRate: (rate: string) => void;
   addEvent: (event: ContractEvent) => void;
-  setLoading: (isLoading: boolean) => void;
+  incrementLoading: () => void; // New function to increment loading count
+  decrementLoading: () => void; // New function to decrement loading count
   setError: (error: string | null) => void;
   resetState: () => void;
 }

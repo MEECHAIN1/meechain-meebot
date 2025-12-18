@@ -21,12 +21,13 @@ const DashboardPage: React.FC = () => {
     setTokenBalance,
     setStakingBalance,
     setRewardRate,
-    addEvent, // Changed from addEventLog
-    setLoading, // Changed from setIsLoading
+    addEvent,
     setError,
-    loading, // Changed from isLoading
-    error // Directly use error from state
+    loading,
+    error,
   } = useAppState();
+  // Destructure new loading functions
+  const { incrementLoading, decrementLoading } = useAppState(); 
   const { data: walletClient } = useWalletClient();
   const { chain } = useAccount();
 
@@ -49,7 +50,7 @@ const DashboardPage: React.FC = () => {
       return;
     }
 
-    setLoading(true);
+    incrementLoading(); // Use incrementLoading
     setError(null);
 
     try {
@@ -74,9 +75,9 @@ const DashboardPage: React.FC = () => {
       console.error("Error fetching dashboard data:", e);
       setError(`Failed to fetch data: ${e.shortMessage || e.message}`);
     } finally {
-      setLoading(false);
+      decrementLoading(); // Use decrementLoading
     }
-  }, [account, isConnected, chain, setNftBalance, setTokenBalance, setStakingBalance, setRewardRate, setLoading, setError]);
+  }, [account, isConnected, chain, setNftBalance, setTokenBalance, setStakingBalance, setRewardRate, incrementLoading, decrementLoading, setError]); // Update dependencies
 
   React.useEffect(() => {
     fetchData();
@@ -90,11 +91,12 @@ const DashboardPage: React.FC = () => {
       return;
     }
     setApproving(true);
+    incrementLoading(); // Use incrementLoading
     setError(null);
     try {
       // Approve a large amount for the staking contract
       const { hash } = await approveToken(walletClient, ADRS.staking, parseUnits("1000000000000000000", tokenDecimals), account);
-      addEvent({ // Changed from addEventLog
+      addEvent({
         timestamp: new Date().toISOString(),
         contract: 'token',
         event: 'Approval Sent',
@@ -107,6 +109,7 @@ const DashboardPage: React.FC = () => {
       setError(`Approval failed: ${e.shortMessage || e.message}`);
     } finally {
       setApproving(false);
+      decrementLoading(); // Use decrementLoading
     }
   };
 
@@ -116,11 +119,12 @@ const DashboardPage: React.FC = () => {
       return;
     }
     setStaking(true);
+    incrementLoading(); // Use incrementLoading
     setError(null);
     try {
       const tokenId = BigInt(stakeAmount);
       const { hash } = await stakeNft(walletClient, tokenId, account);
-      addEvent({ // Changed from addEventLog
+      addEvent({
         timestamp: new Date().toISOString(),
         contract: 'staking',
         event: 'NFT Staked',
@@ -134,6 +138,7 @@ const DashboardPage: React.FC = () => {
       setError(`Staking failed: ${e.shortMessage || e.message}`);
     } finally {
       setStaking(false);
+      decrementLoading(); // Use decrementLoading
     }
   };
 
@@ -143,10 +148,11 @@ const DashboardPage: React.FC = () => {
       return;
     }
     setClaiming(true);
+    incrementLoading(); // Use incrementLoading
     setError(null);
     try {
       const { hash } = await claimRewards(walletClient, account);
-      addEvent({ // Changed from addEventLog
+      addEvent({
         timestamp: new Date().toISOString(),
         contract: 'staking',
         event: 'Rewards Claimed',
@@ -159,6 +165,7 @@ const DashboardPage: React.FC = () => {
       setError(`Claiming failed: ${e.shortMessage || e.message}`);
     } finally {
       setClaiming(false);
+      decrementLoading(); // Use decrementLoading
     }
   };
 

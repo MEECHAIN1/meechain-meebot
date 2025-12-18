@@ -16,16 +16,20 @@ const eventEmojis: Record<string, string> = {
   Claimed: '💰',
 };
 
+// Fix: Added 'swap' to contractColors
 const contractColors: Record<ADRSKey, string> = {
   nft: 'bg-emerald-600',
   token: 'bg-indigo-600',
   staking: 'bg-purple-600',
+  swap: 'bg-pink-600', // Added color for swap
 };
 
+// Fix: Added 'swap' to contractNames
 const contractNames: Record<ADRSKey, string> = {
   nft: 'NFT',
   token: 'Token',
 staking: 'Staking',
+  swap: 'Swap', // Added name for swap
 };
 
 // Helper function to create a searchable string representation of an event log
@@ -125,6 +129,7 @@ const EventLogPage: React.FC = () => {
               <option value="nft">NFT</option>
               <option value="token">Token</option>
               <option value="staking">Staking</option>
+              <option value="swap">Swap</option>{/* Fix: Added swap filter option */}
             </select>
           </div>
           <div>

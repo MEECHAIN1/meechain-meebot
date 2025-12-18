@@ -11,6 +11,44 @@
         background-color: #0f172a; /* Slate 900 */
         color: #e2e8f0; /* Slate 200 */
       }
+
+      /* Custom Keyframes for Splash Screen */
+      @keyframes splashFade {
+        0% { opacity: 0; }
+        10% { opacity: 1; } /* Fade in over first 10% (0.35s for 3.5s total) */
+        90% { opacity: 1; } /* Stay visible until 90% (3.15s for 3.5s total) */
+        100% { opacity: 0; visibility: hidden; } /* Fade out over last 10% */
+      }
+      .animate-splashFade {
+        animation: splashFade 3.5s ease-in-out forwards;
+      }
+
+      @keyframes scaleIn {
+        0% { transform: scale(0.8); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+      .animate-scaleIn {
+        animation: scaleIn 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; /* Bouncy effect */
+      }
+
+      @keyframes pulseGlowSlow {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.1); }
+      }
+      .animate-pulseGlowSlow {
+        animation: pulseGlowSlow 2.5s ease-in-out infinite;
+      }
+
+      @keyframes fadeText {
+        0% { opacity: 0; transform: translateY(10px); }
+        20% { opacity: 0; transform: translateY(10px); } /* Start fading in slightly later */
+        100% { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fadeText {
+        animation: fadeText 1.5s ease-out 0.5s forwards; /* Delay start to appear after M */
+        opacity: 0; /* Hidden by default */
+      }
+
     </style>
     <!-- Define global environment variables for browser-native module loading -->
     <script>

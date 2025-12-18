@@ -13,6 +13,7 @@ const Navbar: React.FC = () => {
           <NavLink to="/" emoji="🏠" hoverColor="hover:text-yellow-400">Dashboard</NavLink>
           <NavLink to="/gallery" emoji="🖼" hoverColor="hover:text-blue-400">Gallery</NavLink>
           <NavLink to="/staking" emoji="💎" hoverColor="hover:text-green-400">Staking</NavLink>
+          <NavLink to="/swap" emoji="💱" hoverColor="hover:text-pink-400">Swap</NavLink> {/* New NavLink */}
           <NavLink to="/events" emoji="📜" hoverColor="hover:text-purple-400">Event Logs</NavLink>
         </div>
         <WalletConnectButton />

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useAppState } from '../context/AppState';
 import { useAccount, useWalletClient } from 'wagmi';
@@ -20,11 +19,12 @@ const StakingPage: React.FC = () => {
     setStakingBalance,
     setRewardRate,
     addEvent,
-    setLoading,
     setError,
     loading,
     error,
   } = useAppState();
+  // Destructure new loading functions
+  const { incrementLoading, decrementLoading } = useAppState();
   const { data: walletClient } = useWalletClient();
   const { chain } = useAccount();
 
@@ -43,7 +43,7 @@ const StakingPage: React.FC = () => {
       return;
     }
 
-    setLoading(true);
+    incrementLoading(); // Use incrementLoading
     try {
       const decimals = await getTokenDecimals();
       setTokenDecimals(decimals);
@@ -77,9 +77,9 @@ const StakingPage: React.FC = () => {
     } catch (e: any) {
       setError(`Failed to fetch staking data: ${e.shortMessage || e.message}`);
     } finally {
-      setLoading(false);
+      decrementLoading(); // Use decrementLoading
     }
-  }, [account, isConnected, chain, setStakingBalance, setRewardRate, setLoading, setError]);
+  }, [account, isConnected, chain, setStakingBalance, setRewardRate, incrementLoading, decrementLoading, setError]);
 
   React.useEffect(() => {
     fetchStakingData();
@@ -87,7 +87,7 @@ const StakingPage: React.FC = () => {
 
   const handleApprove = async (tokenId: bigint) => {
     if (!walletClient || !account || !ADRS.staking) return;
-    setLoading(true);
+    incrementLoading(); // Use incrementLoading
     setError(null);
     try {
       const { hash } = await approveNft(walletClient, ADRS.staking, tokenId, account);
@@ -102,13 +102,13 @@ const StakingPage: React.FC = () => {
     } catch (e: any) {
       setError(`NFT Approval failed: ${e.shortMessage || e.message}`);
     } finally {
-      setLoading(false);
+      decrementLoading(); // Use decrementLoading
     }
   };
 
   const handleStake = async (tokenId: bigint) => {
     if (!walletClient || !account || !ADRS.staking) return;
-    setLoading(true);
+    incrementLoading(); // Use incrementLoading
     setError(null);
     try {
       const approvedAddress = await getApproved(tokenId);
@@ -128,13 +128,13 @@ const StakingPage: React.FC = () => {
     } catch (e: any) {
       setError(`Staking failed: ${e.shortMessage || e.message}`);
     } finally {
-      setLoading(false);
+      decrementLoading(); // Use decrementLoading
     }
   };
 
   const handleUnstake = async (tokenId: bigint) => {
     if (!walletClient || !account) return;
-    setLoading(true);
+    incrementLoading(); // Use incrementLoading
     setError(null);
     try {
       const { hash } = await unstakeNft(walletClient, tokenId, account);
@@ -149,13 +149,13 @@ const StakingPage: React.FC = () => {
     } catch (e: any) {
       setError(`Unstaking failed: ${e.shortMessage || e.message}`);
     } finally {
-      setLoading(false);
+      decrementLoading(); // Use decrementLoading
     }
   };
 
   const handleClaim = async () => {
     if (!walletClient || !account || earnedRewards === 0n) return;
-    setLoading(true);
+    incrementLoading(); // Use incrementLoading
     setError(null);
     try {
       const { hash } = await claimRewards(walletClient, account);
@@ -174,7 +174,7 @@ const StakingPage: React.FC = () => {
     } catch (e: any) {
       setError(`Claiming failed: ${e.shortMessage || e.message}`);
     } finally {
-      setLoading(false);
+      decrementLoading(); // Use decrementLoading
     }
   };
 

@@ -44,15 +44,18 @@ export const useAppState = create<AppState>((set, get) => ({
     }));
   },
 
-  setLoading: (isLoading) => {
-    set((state) => {
-      const newCount = isLoading ? state.loadingCount + 1 : Math.max(0, state.loadingCount - 1);
-      return { 
-        loadingCount: newCount,
-        loading: newCount > 0 
-      };
-    });
-  },
+  // New functions for managing loadingCount
+  incrementLoading: () => set((state) => ({
+    loadingCount: state.loadingCount + 1,
+    loading: true, // Always true when something starts loading
+  })),
+  decrementLoading: () => set((state) => {
+    const newCount = Math.max(0, state.loadingCount - 1); // Ensure count doesn't go below zero
+    return {
+      loadingCount: newCount,
+      loading: newCount > 0, // Loading is true only if there's still something loading
+    };
+  }),
 
   setError: (error) => set({ error }),
   
@@ -66,8 +69,8 @@ export const useAppState = create<AppState>((set, get) => ({
     stakingBalance: "0",
     rewardRate: "0",
     events: [],
-    loading: false,
-    loadingCount: 0,
+    loading: false,       // Reset loading to false
+    loadingCount: 0,      // Reset loadingCount to 0
     error: null,
   }),
 }));
