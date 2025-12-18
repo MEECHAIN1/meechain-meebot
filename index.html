@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MeeChain MeeBot DApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        background-color: #0f172a; /* Slate 900 */
+        color: #e2e8f0; /* Slate 200 */
+      }
+    </style>
+    <!-- Define global environment variables for browser-native module loading -->
+    <script>
+      // Default Hardhat RPC URL. Adjust if your local network is different.
+      window.VITE_RPC_URL = "http://127.0.0.1:8545";
+      // Placeholder addresses for local development (Hardhat default deployer addresses).
+      // REPLACE THESE WITH YOUR ACTUAL DEPLOYED CONTRACT ADDRESSES on your Hardhat network.
+      window.VITE_NFT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+      window.VITE_TOKEN_ADDRESS = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fEAb28";
+      window.VITE_STAKING_ADDRESS = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
+    </script>
+<script type="importmap">
+{
+  "imports": {
+    "react-router-dom": "https://esm.sh/react-router-dom@6.24.1",
+    "react/": "https://esm.sh/react@18.2.0/",
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/": "https://esm.sh/react-dom@18.2.0/",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "date-fns": "https://esm.sh/date-fns@3.6.0",
+    "file-saver": "https://esm.sh/file-saver@2.0.5",
+    "zustand": "https://esm.sh/zustand@4.5.2",
+    "js-confetti": "https://esm.sh/js-confetti@0.13.1",
+    "viem/": "https://esm.sh/viem@2.43.1/",
+    "viem": "https://esm.sh/viem@2.43.1",
+    "wagmi/": "https://esm.sh/wagmi@2.12.0/",
+    "wagmi": "https://esm.sh/wagmi@2.12.0",
+    "wagmi/react": "https://esm.sh/wagmi@2.12.0/react",
+    "wagmi/connectors": "https://esm.sh/wagmi@2.12.0/connectors"
+  }
+}
+</script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>

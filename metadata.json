@@ -1,0 +1,5 @@
+{
+  "name": "MeeChain MeeBot DApp",
+  "description": "A decentralized application for MeeChain MeeBot NFTs, Tokens, and Staking, built with Viem, React, TypeScript, and Tailwind CSS.",
+  "requestFramePermissions": []
+}
