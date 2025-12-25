@@ -3,7 +3,7 @@ import { createConfig } from 'wagmi';
 // Fix: Import metaMask and walletConnect factory functions from wagmi/connectors
 import { metaMask, walletConnect } from 'wagmi/connectors';
 import { http } from 'viem';
-import { chains } from '../constants/chains';
+import { chains } from './constants/chains';
 
 // Set up wagmi config
 export const wagmiConfig = createConfig({
