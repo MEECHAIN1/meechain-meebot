@@ -12,7 +12,7 @@ MeeChain MeeBot คือ DApp ที่ออกแบบมาเพื่อ�
 
 ### 1. Clone โปรเจกต์
 ```bash
-git clone https://github.com/meechain1/meechain-meebot.git
+git clone https://github.com/your-org/meechain-meebot.git
 cd meechain-meebot
 ```
 

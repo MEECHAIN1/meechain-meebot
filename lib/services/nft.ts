@@ -14,7 +14,6 @@ interface WriteContractResult {
 export async function getNftBalance(account: Address): Promise<bigint> {
   if (!ADRS.nft || !account) return 0n;
   try {
-    // Fix: Ensure ADRS.nft is an Address and cast ABI for stricter type inference
     const balance = await publicClient.readContract({
       address: ADRS.nft as Address,
       abi: ABIS.nft,
@@ -31,7 +30,6 @@ export async function getNftBalance(account: Address): Promise<bigint> {
 export async function getApproved(tokenId: bigint): Promise<Address | undefined> {
   if (!ADRS.nft) return undefined;
   try {
-    // Fix: Ensure ADRS.nft is an Address and cast ABI for stricter type inference
     const approved = await publicClient.readContract({
       address: ADRS.nft as Address,
       abi: ABIS.nft,
@@ -48,7 +46,6 @@ export async function getApproved(tokenId: bigint): Promise<Address | undefined>
 export async function getTokenURI(tokenId: bigint): Promise<string | undefined> {
   if (!ADRS.nft) return undefined;
   try {
-    // Fix: Ensure ADRS.nft is an Address and cast ABI for stricter type inference
     const uri = await publicClient.readContract({
       address: ADRS.nft as Address,
       abi: ABIS.nft,
@@ -65,7 +62,6 @@ export async function getTokenURI(tokenId: bigint): Promise<string | undefined> 
 export async function getOwnerOf(tokenId: bigint): Promise<Address | undefined> {
   if (!ADRS.nft) return undefined;
   try {
-    // Fix: Ensure ADRS.nft is an Address and cast ABI for stricter type inference
     const owner = await publicClient.readContract({
       address: ADRS.nft as Address,
       abi: ABIS.nft,
@@ -90,7 +86,6 @@ export async function approveNft(
     return;
   }
   try {
-    // Fix: Ensure ADRS.nft is an Address and cast ABI for stricter type inference
     const { request } = await publicClient.simulateContract({
       account,
       address: ADRS.nft as Address,
@@ -100,7 +95,6 @@ export async function approveNft(
       chain: localHardhat,
     });
     const hash = await walletClient.writeContract(request);
-    // Fix: Changed waitForTransaction to waitForTransactionReceipt
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
     return { hash, receipt };
   } catch (error) {
@@ -121,7 +115,6 @@ export async function transferNft(
     return;
   }
   try {
-    // Fix: Ensure ADRS.nft is an Address and cast ABI for stricter type inference
     const { request } = await publicClient.simulateContract({
       account,
       address: ADRS.nft as Address,
@@ -131,7 +124,6 @@ export async function transferNft(
       chain: localHardhat,
     });
     const hash = await walletClient.writeContract(request);
-    // Fix: Changed waitForTransaction to waitForTransactionReceipt
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
     return { hash, receipt };
   } catch (error) {
@@ -149,27 +141,27 @@ export async function fetchNftMetadata(tokenId: bigint): Promise<NFTMetadata | u
 
     if (!tokenUri || !owner || !approved) return undefined;
 
-    // Assuming tokenURI returns a base64 encoded JSON or a direct URL
-    let metadata: { name: string; description: string; image: string; } = { name: `MeeBot #${tokenId}`, description: '', image: `https://picsum.photos/300/300?random=${tokenId}` };
+    let metadata: { name: string; description: string; image: string; } = { 
+      name: `MeeBot #${tokenId}`, 
+      description: `A digital collectible MeeBot #${tokenId}.`, 
+      image: `https://picsum.photos/300/300?random=${tokenId}` 
+    };
 
     if (tokenUri.startsWith('data:application/json;base64,')) {
-      const base64 = tokenUri.split(',')[1];
-      const decoded = atob(base64);
-      metadata = JSON.parse(decoded);
-    } else {
-      // In a real app, you would fetch from the URL
-      // const res = await fetch(tokenUri);
-      // metadata = await res.json();
-      // For now, use a placeholder image if it's a generic URL
-      metadata = { name: `MeeBot #${tokenId}`, description: `A digital collectible MeeBot #${tokenId}.`, image: `https://picsum.photos/300/300?random=${tokenId}` };
+      try {
+        const base64 = tokenUri.split(',')[1];
+        const decoded = atob(base64);
+        metadata = JSON.parse(decoded);
+      } catch (parseError) {
+        console.error("Metadata parse error for ID", tokenId, parseError);
+      }
     }
-
 
     return {
       tokenId,
-      name: metadata.name,
-      description: metadata.description,
-      image: metadata.image,
+      name: metadata.name || `MeeBot #${tokenId}`,
+      description: metadata.description || `MeeBot unit #${tokenId}`,
+      image: metadata.image || `https://picsum.photos/300/300?random=${tokenId}`,
       owner,
       approved,
     };
@@ -179,12 +171,8 @@ export async function fetchNftMetadata(tokenId: bigint): Promise<NFTMetadata | u
   }
 }
 
-// Event watching
 export function watchNftEvents(publicClient: PublicClient, addEvent: (event: ContractEvent) => void) {
-  if (!ADRS.nft) {
-    console.warn("NFT contract address not set, cannot watch events.");
-    return () => {}; // Return a no-op unsubscribe function
-  }
+  if (!ADRS.nft) return () => {};
 
   const unwatchApproval = publicClient.watchContractEvent({
     address: ADRS.nft,
@@ -198,7 +186,6 @@ export function watchNftEvents(publicClient: PublicClient, addEvent: (event: Con
             data: log.data,
             topics: log.topics,
           });
-          // Fix: Check if decoded is not null/undefined and has 'args' property
           if (decoded && 'args' in decoded) {
             addEvent({
               timestamp: new Date().toISOString(),
@@ -227,7 +214,6 @@ export function watchNftEvents(publicClient: PublicClient, addEvent: (event: Con
             data: log.data,
             topics: log.topics,
           });
-          // Fix: Check if decoded is not null/undefined and has 'args' property
           if (decoded && 'args' in decoded) {
             addEvent({
               timestamp: new Date().toISOString(),
@@ -256,7 +242,6 @@ export function watchNftEvents(publicClient: PublicClient, addEvent: (event: Con
             data: log.data,
             topics: log.topics,
           });
-          // Fix: Check if decoded is not null/undefined and has 'args' property
           if (decoded && 'args' in decoded) {
             addEvent({
               timestamp: new Date().toISOString(),

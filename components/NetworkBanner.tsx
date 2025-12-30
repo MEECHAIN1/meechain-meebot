@@ -1,15 +1,14 @@
 import React from 'react';
-import { useAccount } from 'wagmi'; // useAccount now provides the chain object
-import { useSwitchChain } from 'wagmi/react'; // useSwitchChain is the new hook for switching networks
+import { useAccount, useSwitchChain } from 'wagmi'; 
 import { useAppState } from '../context/AppState';
 import { chains } from '../constants/chains';
 
 const NetworkBanner: React.FC = () => {
-  const { isConnected, chain } = useAccount(); // Get chain directly from useAccount
-  const { switchChain } = useSwitchChain(); // Use the new useSwitchChain hook
+  const { isConnected, chain } = useAccount();
+  const { switchChain } = useSwitchChain();
   const { setChain, setError } = useAppState();
 
-  const requiredChainId = chains[0].id; // Assuming the DApp primarily targets the first chain in constants/chains.ts
+  const requiredChainId = chains[0].id;
 
   React.useEffect(() => {
     if (chain) {
@@ -37,7 +36,7 @@ const NetworkBanner: React.FC = () => {
           <button
             onClick={() => {
               try {
-                switchChain({ chainId: requiredChainId }); // Call switchChain with chainId object
+                switchChain({ chainId: requiredChainId });
               } catch (e: any) {
                 setError(`Failed to switch network: ${e.message}`);
               }
