@@ -59,7 +59,7 @@
       // Immediate process shim to prevent ReferenceErrors
       window.process = { env: { NODE_ENV: 'production', API_KEY: '' } };
       
-      // Ritual environment variables
+      // Ritual environment variables from window
       window.VITE_RPC_URL = "https://shape-mainnet.g.alchemy.com/v2/J1HfoMSvISZdnANVlkTA6";
       window.VITE_NFT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
       window.VITE_TOKEN_ADDRESS = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fEAb28";
